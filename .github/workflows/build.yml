@@ -20,6 +20,7 @@ jobs:
             -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
             -fobjc-arc \
             -fmodules \
+            -Wno-everything \
             -miphoneos-version-min=12.0 \
             -framework Foundation \
             -framework UIKit \
