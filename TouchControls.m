@@ -51,7 +51,7 @@ typedef union {
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor =[UIColor clearColor];
         [self setupControls];
     }
     return self;
@@ -67,7 +67,7 @@ typedef union {
 }
 
 // --- MAGIC INJECTION METHOD ---
-// Now takes both 'sym' and 'scancode' to guarantee the game detects Arrow Keys
+// Takes both 'sym' and 'scancode' to guarantee the game detects Arrow Keys
 - (void)simulateKey:(int)keyCode scancode:(int)scanCode isDown:(BOOL)isDown {
     static int (*SDL_PushEvent_Func)(SDL_Event*) = NULL;
     static dispatch_once_t onceToken;
@@ -88,35 +88,40 @@ typedef union {
 }
 
 - (void)setupControls {
-    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+    CGFloat screenW =[UIScreen mainScreen].bounds.size.width;
     CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
 
     // --- ESC Button (Top Left) ---
     UIButton *escBtn =[UIButton buttonWithType:UIButtonTypeSystem];
-    escBtn.frame = CGRectMake(20, 40, 60, 40);[escBtn setTitle:@"ESC" forState:UIControlStateNormal];
-    escBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
-    [escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];[escBtn addTarget:self action:@selector(escReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];[self addSubview:escBtn];
+    escBtn.frame = CGRectMake(20, 40, 60, 40);
+    [escBtn setTitle:@"ESC" forState:UIControlStateNormal];
+    escBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];[escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];[escBtn addTarget:self action:@selector(escReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self addSubview:escBtn];
 
     // --- A Button (Bottom Right) ---
-    UIButton *aBtn =[UIButton buttonWithType:UIButtonTypeSystem];
-    aBtn.frame = CGRectMake(screenW - 120, screenH - 120, 90, 90);[aBtn setTitle:@"A" forState:UIControlStateNormal];
-    aBtn.titleLabel.font =[UIFont boldSystemFontOfSize:35];
-    aBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+    UIButton *aBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    aBtn.frame = CGRectMake(screenW - 120, screenH - 120, 90, 90);
+    [aBtn setTitle:@"A" forState:UIControlStateNormal];
+    aBtn.titleLabel.font = [UIFont boldSystemFontOfSize:35];
+    aBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     [aBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    aBtn.layer.cornerRadius = 45.0;[aBtn addTarget:self action:@selector(aBtnPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];[self addSubview:aBtn];
+    aBtn.layer.cornerRadius = 45.0;
+    [aBtn addTarget:self action:@selector(aBtnPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self addSubview:aBtn];
 
     // --- S Button (To the left of A) ---
-    UIButton *sBtn =[UIButton buttonWithType:UIButtonTypeSystem];
-    sBtn.frame = CGRectMake(screenW - 230, screenH - 120, 90, 90);[sBtn setTitle:@"S" forState:UIControlStateNormal];
-    sBtn.titleLabel.font =[UIFont boldSystemFontOfSize:35];
-    sBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
-    [sBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    sBtn.layer.cornerRadius = 45.0;[sBtn addTarget:self action:@selector(sBtnPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];[self addSubview:sBtn];
+    UIButton *sBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    sBtn.frame = CGRectMake(screenW - 230, screenH - 120, 90, 90);
+    [sBtn setTitle:@"S" forState:UIControlStateNormal];
+    sBtn.titleLabel.font = [UIFont boldSystemFontOfSize:35];
+    sBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];[sBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    sBtn.layer.cornerRadius = 45.0;[sBtn addTarget:self action:@selector(sBtnPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self addSubview:sBtn];
 
     // --- Joystick (Bottom Left) ---
     self.joystickBase = [[UIView alloc] initWithFrame:CGRectMake(40, screenH - 220, 180, 180)];
-    self.joystickBase.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.4];
+    self.joystickBase.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.4];
     self.joystickBase.layer.cornerRadius = 90.0;
     self.joystickBase.userInteractionEnabled = YES;
     [self addSubview:self.joystickBase];
@@ -128,12 +133,13 @@ typedef union {
 
     self.joystickCenter = CGPointMake(90, 90);
 
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];[self.joystickBase addGestureRecognizer:pan];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.joystickBase addGestureRecognizer:pan];
 }
 
 // --- Joystick -> ARROW KEYS Keyboard Logic ---
 - (void)handlePan:(UIPanGestureRecognizer *)pan {
-    CGPoint translation =[pan translationInView:self.joystickBase];
+    CGPoint translation = [pan translationInView:self.joystickBase];
     
     if (pan.state == UIGestureRecognizerStateBegan || pan.state == UIGestureRecognizerStateChanged) {
         CGFloat dx = translation.x;
@@ -154,23 +160,34 @@ typedef union {
         BOOL leftNow = dx < -25;
         BOOL rightNow = dx > 25;
         
-        // SDL Keycode Map for Arrows:
-        // UP: sym=1073741906, scan=82
-        // DOWN: sym=1073741905, scan=81
-        // LEFT: sym=1073741904, scan=80
-        // RIGHT: sym=1073741903, scan=79
-        if (upNow != self.isUpDown) {[self simulateKey:1073741906 scancode:82 isDown:upNow]; self.isUpDown = upNow; }
-        if (downNow != self.isDownDown) {[self simulateKey:1073741905 scancode:81 isDown:downNow]; self.isDownDown = downNow; }
-        if (leftNow != self.isLeftDown) {[self simulateKey:1073741904 scancode:80 isDown:leftNow]; self.isLeftDown = leftNow; }
-        if (rightNow != self.isRightDown) {[self simulateKey:1073741903 scancode:79 isDown:rightNow]; self.isRightDown = rightNow; }
+        if (upNow != self.isUpDown) {[self simulateKey:1073741906 scancode:82 isDown:upNow]; 
+            self.isUpDown = upNow; 
+        }
+        if (downNow != self.isDownDown) {[self simulateKey:1073741905 scancode:81 isDown:downNow]; 
+            self.isDownDown = downNow; 
+        }
+        if (leftNow != self.isLeftDown) {[self simulateKey:1073741904 scancode:80 isDown:leftNow]; 
+            self.isLeftDown = leftNow; 
+        }
+        if (rightNow != self.isRightDown) {[self simulateKey:1073741903 scancode:79 isDown:rightNow]; 
+            self.isRightDown = rightNow; 
+        }
         
     } else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
         
         // Let go of all arrow keys
-        if (self.isUpDown) {[self simulateKey:1073741906 scancode:82 isDown:NO]; self.isUpDown = NO; }
-        if (self.isDownDown) {[self simulateKey:1073741905 scancode:81 isDown:NO]; self.isDownDown = NO; }
-        if (self.isLeftDown) {[self simulateKey:1073741904 scancode:80 isDown:NO]; self.isLeftDown = NO; }
-        if (self.isRightDown) {[self simulateKey:1073741903 scancode:79 isDown:NO]; self.isRightDown = NO; }
+        if (self.isUpDown) {[self simulateKey:1073741906 scancode:82 isDown:NO]; 
+            self.isUpDown = NO; 
+        }
+        if (self.isDownDown) {[self simulateKey:1073741905 scancode:81 isDown:NO]; 
+            self.isDownDown = NO; 
+        }
+        if (self.isLeftDown) {[self simulateKey:1073741904 scancode:80 isDown:NO]; 
+            self.isLeftDown = NO; 
+        }
+        if (self.isRightDown) {[self simulateKey:1073741903 scancode:79 isDown:NO]; 
+            self.isRightDown = NO; 
+        }
         
         // Snap back to center[UIView animateWithDuration:0.2 animations:^{
             self.joystickKnob.center = self.joystickCenter;
@@ -179,13 +196,12 @@ typedef union {
 }
 
 // --- Button Actions -> 'A', 'S', and 'ESC' Keyboard Presses ---
-// ESC: sym=27, scan=41 | A: sym=97, scan=4 | S: sym=115, scan=22
 - (void)escPressed   {[self simulateKey:27 scancode:41 isDown:YES]; }
-- (void)escReleased  {[self simulateKey:27 scancode:41 isDown:NO]; }
-- (void)aBtnPressed  {[self simulateKey:97 scancode:4 isDown:YES]; }
+- (void)escReleased  { [self simulateKey:27 scancode:41 isDown:NO]; }
+- (void)aBtnPressed  { [self simulateKey:97 scancode:4 isDown:YES]; }
 - (void)aBtnReleased {[self simulateKey:97 scancode:4 isDown:NO]; }
-- (void)sBtnPressed  { [self simulateKey:115 scancode:22 isDown:YES]; }
-- (void)sBtnReleased { [self simulateKey:115 scancode:22 isDown:NO]; }
+- (void)sBtnPressed  {[self simulateKey:115 scancode:22 isDown:YES]; }
+- (void)sBtnReleased {[self simulateKey:115 scancode:22 isDown:NO]; }
 @end
 
 
@@ -201,7 +217,10 @@ static void inject_overlay() {
                 if ([scene isKindOfClass:[UIWindowScene class]]) {
                     UIWindowScene *windowScene = (UIWindowScene *)scene;
                     for (UIWindow *window in windowScene.windows) {
-                        if (window.isKeyWindow) { targetWindow = window; break; }
+                        if (window.isKeyWindow) { 
+                            targetWindow = window; 
+                            break; 
+                        }
                     }
                 }
             }
@@ -209,12 +228,16 @@ static void inject_overlay() {
 
         if (targetWindow && targetWindow.bounds.size.width > 0) {
             for (UIView *subview in targetWindow.subviews) {
-                if ([subview isKindOfClass:[VirtualControllerView class]]) { return; }
+                if ([subview isKindOfClass:[VirtualControllerView class]]) { 
+                    return; 
+                }
             }
             
             VirtualControllerView *overlay = [[VirtualControllerView alloc] initWithFrame:targetWindow.bounds];
             overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            overlay.layer.zPosition = 99999;[targetWindow addSubview:overlay];
+            overlay.layer.zPosition = 99999;
+            
+            [targetWindow addSubview:overlay];
             [targetWindow bringSubviewToFront:overlay];
             
         } else {
