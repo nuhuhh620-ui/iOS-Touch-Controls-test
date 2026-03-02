@@ -2,9 +2,6 @@
 #import <math.h>
 #import <dlfcn.h>
 
-// ==========================================
-// 1. PC GAME KEYBOARD SIMULATION (SDL2)
-// ==========================================
 typedef struct {
     uint32_t scancode;
     int32_t sym;
@@ -29,15 +26,11 @@ typedef union {
     uint8_t padding[56];
 } SDL_Event;
 
-// ==========================================
-// 2. Define the Virtual Controller UI
-// ==========================================
 @interface VirtualControllerView : UIView
 @property (nonatomic, strong) UIView *joystickBase;
 @property (nonatomic, strong) UIView *joystickKnob;
 @property (nonatomic, assign) CGPoint joystickCenter;
 
-// Tracking keyboard hold states for Arrow Keys
 @property (nonatomic, assign) BOOL isUpDown;
 @property (nonatomic, assign) BOOL isDownDown;
 @property (nonatomic, assign) BOOL isLeftDown;
@@ -56,7 +49,6 @@ typedef union {
     return self;
 }
 
-// CRITICAL: Allows touches on empty space to pass through to the game
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *hitView = [super hitTest:point withEvent:event];
     if (hitView == self) {
@@ -65,7 +57,6 @@ typedef union {
     return hitView;
 }
 
-// --- MAGIC INJECTION METHOD ---
 - (void)simulateKey:(int)keyCode scancode:(int)scanCode isDown:(BOOL)isDown {
     static int (*SDL_PushEvent_Func)(SDL_Event*) = NULL;
     static dispatch_once_t onceToken;
@@ -77,7 +68,7 @@ typedef union {
     if (SDL_PushEvent_Func) {
         SDL_Event event;
         memset(&event, 0, sizeof(event));
-        event.type = isDown ? 0x300 /* SDL_KEYDOWN */ : 0x301 /* SDL_KEYUP */;
+        event.type = isDown ? 0x300 : 0x301;
         event.key.state = isDown ? 1 : 0;
         event.key.keysym.sym = keyCode;
         event.key.keysym.scancode = scanCode;
@@ -87,29 +78,24 @@ typedef union {
 
 - (void)setupControls {
     CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
-    CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
+    CGFloat screenH =[UIScreen mainScreen].bounds.size.height;
 
-    // --- ESC Button (Top Left) ---
     UIButton *escBtn =[UIButton buttonWithType:UIButtonTypeSystem];
     escBtn.frame = CGRectMake(20, 40, 60, 40);
     [escBtn setTitle:@"ESC" forState:UIControlStateNormal];
-    escBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
+    escBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
     [escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    escBtn.layer.cornerRadius = 8.0;
-    [escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];[escBtn addTarget:self action:@selector(escReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];[escBtn addTarget:self action:@selector(escReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:escBtn];
 
-    // --- A Button (Bottom Right) ---
-    UIButton *aBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    aBtn.frame = CGRectMake(screenW - 120, screenH - 120, 90, 90);
-    [aBtn setTitle:@"A" forState:UIControlStateNormal];
+    UIButton *aBtn =[UIButton buttonWithType:UIButtonTypeSystem];
+    aBtn.frame = CGRectMake(screenW - 120, screenH - 120, 90, 90);[aBtn setTitle:@"A" forState:UIControlStateNormal];
     aBtn.titleLabel.font = [UIFont boldSystemFontOfSize:35];
-    aBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+    aBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     [aBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     aBtn.layer.cornerRadius = 45.0;[aBtn addTarget:self action:@selector(aBtnPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:aBtn];
 
-    // --- S Button (To the left of A) ---
     UIButton *sBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     sBtn.frame = CGRectMake(screenW - 230, screenH - 120, 90, 90);
     [sBtn setTitle:@"S" forState:UIControlStateNormal];
@@ -119,25 +105,22 @@ typedef union {
     sBtn.layer.cornerRadius = 45.0;[sBtn addTarget:self action:@selector(sBtnPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sBtnReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:sBtn];
 
-    // --- Joystick (Bottom Left) ---
     self.joystickBase = [[UIView alloc] initWithFrame:CGRectMake(40, screenH - 220, 180, 180)];
-    self.joystickBase.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.4];
+    self.joystickBase.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.4];
     self.joystickBase.layer.cornerRadius = 90.0;
     self.joystickBase.userInteractionEnabled = YES;
     [self addSubview:self.joystickBase];
 
     self.joystickKnob = [[UIView alloc] initWithFrame:CGRectMake(50, 50, 80, 80)];
-    self.joystickKnob.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.6];
+    self.joystickKnob.backgroundColor =[UIColor colorWithWhite:0.8 alpha:0.6];
     self.joystickKnob.layer.cornerRadius = 40.0;
     self.joystickKnob.userInteractionEnabled = NO;[self.joystickBase addSubview:self.joystickKnob];
 
     self.joystickCenter = CGPointMake(90, 90);
 
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    [self.joystickBase addGestureRecognizer:pan];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];[self.joystickBase addGestureRecognizer:pan];
 }
 
-// --- Joystick -> ARROW KEYS Keyboard Logic ---
 - (void)handlePan:(UIPanGestureRecognizer *)pan {
     CGPoint translation = [pan translationInView:self.joystickBase];
     
@@ -154,7 +137,6 @@ typedef union {
         
         self.joystickKnob.center = CGPointMake(self.joystickCenter.x + dx, self.joystickCenter.y + dy);
         
-        // Translate physical joystick movement into UP, DOWN, LEFT, RIGHT
         BOOL upNow = dy < -25;
         BOOL downNow = dy > 25;
         BOOL leftNow = dx < -25;
@@ -175,7 +157,6 @@ typedef union {
         
     } else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
         
-        // Let go of all arrow keys
         if (self.isUpDown) {[self simulateKey:1073741906 scancode:82 isDown:NO];
             self.isUpDown = NO;
         }
@@ -187,30 +168,31 @@ typedef union {
         }
         if (self.isRightDown) {[self simulateKey:1073741903 scancode:79 isDown:NO];
             self.isRightDown = NO;
-        }
-        
-        // Snap back to center[UIView animateWithDuration:0.2 animations:^{
+        }[UIView animateWithDuration:0.2 animations:^{
             self.joystickKnob.center = self.joystickCenter;
         }];
     }
 }
 
-// --- Button Actions -> 'A', 'S', and 'ESC' Keyboard Presses ---
-- (void)escPressed   {[self simulateKey:27 scancode:41 isDown:YES]; }
-- (void)escReleased  {[self simulateKey:27 scancode:41 isDown:NO]; }
-- (void)aBtnPressed  { [self simulateKey:97 scancode:4 isDown:YES]; }
-- (void)aBtnReleased { [self simulateKey:97 scancode:4 isDown:NO]; }
-- (void)sBtnPressed  {[self simulateKey:115 scancode:22 isDown:YES]; }
-- (void)sBtnReleased {[self simulateKey:115 scancode:22 isDown:NO]; }
+- (void)escPressed {[self simulateKey:27 scancode:41 isDown:YES]; 
+}
+- (void)escReleased {[self simulateKey:27 scancode:41 isDown:NO]; 
+}
+- (void)aBtnPressed { 
+    [self simulateKey:97 scancode:4 isDown:YES]; 
+}
+- (void)aBtnReleased {[self simulateKey:97 scancode:4 isDown:NO]; 
+}
+- (void)sBtnPressed {[self simulateKey:115 scancode:22 isDown:YES]; 
+}
+- (void)sBtnReleased {[self simulateKey:115 scancode:22 isDown:NO]; 
+}
 @end
 
-// ==========================================
-// 3. BULLETPROOF INJECTION LOGIC
-// ==========================================
 static void inject_overlay() {
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        UIWindow *targetWindow =[UIApplication sharedApplication].keyWindow;
+        UIWindow *targetWindow = [UIApplication sharedApplication].keyWindow;
         if (!targetWindow) {
             for (UIScene *scene in[UIApplication sharedApplication].connectedScenes) {
                 if ([scene isKindOfClass:[UIWindowScene class]]) {
