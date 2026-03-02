@@ -13,7 +13,7 @@
 @implementation VirtualControllerView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame;
     if (self) {
         self.userInteractionEnabled = YES;
         self.backgroundColor = [UIColor clearColor];
@@ -100,8 +100,8 @@
         self.joystickKnob.center = CGPointMake(self.joystickCenter.x + dx, self.joystickCenter.y + dy);
         
     } else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
-        
-        // Snap back to center correctly[UIView animateWithDuration:0.2 animations:^{
+        // Snap back to center correctly
+        [UIView animateWithDuration:0.2 animations:^{
             self.joystickKnob.center = self.joystickCenter;
         }];
         
