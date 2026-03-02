@@ -1,6 +1,5 @@
 name: Compile Touch Controls Dylib
 
-# This workflow runs whenever you push a change, or you can trigger it manually
 on:
   push:
     branches: [ "main", "master" ]
@@ -8,7 +7,6 @@ on:
 
 jobs:
   build:
-    # We must use a macOS runner to get access to the iOS SDK and clang
     runs-on: macos-latest
 
     steps:
@@ -20,6 +18,7 @@ jobs:
           echo "Compiling TouchControls.m for arm64 (iOS)..."
           clang -dynamiclib -arch arm64 \
             -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
+            -fobjc-arc \
             -framework Foundation \
             -framework UIKit \
             TouchControls.m \
