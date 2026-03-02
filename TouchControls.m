@@ -13,7 +13,7 @@
 @implementation VirtualControllerView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame;
+    self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
         self.backgroundColor = [UIColor clearColor];
@@ -38,28 +38,28 @@
     // --- ESC Button (Top Left) ---
     UIButton *escBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     escBtn.frame = CGRectMake(20, 40, 60, 40);[escBtn setTitle:@"ESC" forState:UIControlStateNormal];
-    escBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+escBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
     [escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];
+escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];
     [self addSubview:escBtn];
 
     // --- A Button (Bottom Right) ---
     UIButton *aBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    aBtn.frame = CGRectMake(screenW - 140, screenH - 80, 50, 50);
+aBtn.frame = CGRectMake(screenW - 140, screenH - 80, 50, 50);
     [aBtn setTitle:@"A" forState:UIControlStateNormal];
-    aBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
+aBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     [aBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    aBtn.layer.cornerRadius = 25.0;
+aBtn.layer.cornerRadius = 25.0;
     [aBtn addTarget:self action:@selector(aPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:aBtn];
 
     // --- S Button (Bottom Right) ---
     UIButton *sBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    sBtn.frame = CGRectMake(screenW - 80, screenH - 140, 50, 50);
+sBtn.frame = CGRectMake(screenW - 80, screenH - 140, 50, 50);
     [sBtn setTitle:@"S" forState:UIControlStateNormal];
-    sBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+sBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
     [sBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    sBtn.layer.cornerRadius = 25.0;
+sBtn.layer.cornerRadius = 25.0;
     [sBtn addTarget:self action:@selector(sPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:sBtn];
 
