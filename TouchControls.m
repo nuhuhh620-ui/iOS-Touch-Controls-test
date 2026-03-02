@@ -13,7 +13,7 @@
 @implementation VirtualControllerView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    self =[super initWithFrame:frame];
+    self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
         self.backgroundColor = [UIColor clearColor];
@@ -24,7 +24,7 @@
 
 // CRITICAL: Allows touches on empty space to pass through to the game
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *hitView =[super hitTest:point withEvent:event];
+    UIView *hitView = [super hitTest:point withEvent:event];
     if (hitView == self) {
         return nil;
     }
@@ -32,44 +32,49 @@
 }
 
 - (void)setupControls {
-    CGFloat screenW =[UIScreen mainScreen].bounds.size.width;
-    CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
+    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+    CGFloat screenH =[UIScreen mainScreen].bounds.size.height;
 
     // --- ESC Button (Top Left) ---
-    UIButton *escBtn =[UIButton buttonWithType:UIButtonTypeSystem];
-    escBtn.frame = CGRectMake(20, 40, 60, 40);
-    [escBtn setTitle:@"ESC" forState:UIControlStateNormal];
-    escBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];[escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    escBtn.layer.cornerRadius = 8;
-    [escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];
+    UIButton *escBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    escBtn.frame = CGRectMake(20, 40, 60, 40);[escBtn setTitle:@"ESC" forState:UIControlStateNormal];
+    escBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+    [escBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    escBtn.layer.cornerRadius = 8.0;[escBtn addTarget:self action:@selector(escPressed) forControlEvents:UIControlEventTouchDown];
     [self addSubview:escBtn];
 
     // --- A Button (Bottom Right) ---
     UIButton *aBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    aBtn.frame = CGRectMake(screenW - 140, screenH - 80, 50, 50);[aBtn setTitle:@"A" forState:UIControlStateNormal];
-    aBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
+    aBtn.frame = CGRectMake(screenW - 140, screenH - 80, 50, 50);
+    [aBtn setTitle:@"A" forState:UIControlStateNormal];
+    aBtn.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     [aBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    aBtn.layer.cornerRadius = 25;[aBtn addTarget:self action:@selector(aPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];[self addSubview:aBtn];
+    aBtn.layer.cornerRadius = 25.0;
+    [aBtn addTarget:self action:@selector(aPressed) forControlEvents:UIControlEventTouchDown];[aBtn addTarget:self action:@selector(aReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self addSubview:aBtn];
 
     // --- S Button (Bottom Right) ---
-    UIButton *sBtn =[UIButton buttonWithType:UIButtonTypeSystem];
-    sBtn.frame = CGRectMake(screenW - 80, screenH - 140, 50, 50);[sBtn setTitle:@"S" forState:UIControlStateNormal];
+    UIButton *sBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    sBtn.frame = CGRectMake(screenW - 80, screenH - 140, 50, 50);
+    [sBtn setTitle:@"S" forState:UIControlStateNormal];
     sBtn.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.5];
     [sBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    sBtn.layer.cornerRadius = 25;[sBtn addTarget:self action:@selector(sPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    sBtn.layer.cornerRadius = 25.0;
+    [sBtn addTarget:self action:@selector(sPressed) forControlEvents:UIControlEventTouchDown];[sBtn addTarget:self action:@selector(sReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     [self addSubview:sBtn];
 
     // --- Joystick (Bottom Left) ---
     self.joystickBase = [[UIView alloc] initWithFrame:CGRectMake(40, screenH - 160, 120, 120)];
-    self.joystickBase.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.4];
-    self.joystickBase.layer.cornerRadius = 60;
+    self.joystickBase.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.4];
+    self.joystickBase.layer.cornerRadius = 60.0;
     self.joystickBase.userInteractionEnabled = YES;
     [self addSubview:self.joystickBase];
 
     self.joystickKnob = [[UIView alloc] initWithFrame:CGRectMake(35, 35, 50, 50)];
-    self.joystickKnob.backgroundColor =[UIColor colorWithWhite:0.8 alpha:0.6];
-    self.joystickKnob.layer.cornerRadius = 25;
-    self.joystickKnob.userInteractionEnabled = NO;[self.joystickBase addSubview:self.joystickKnob];
+    self.joystickKnob.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.6];
+    self.joystickKnob.layer.cornerRadius = 25.0;
+    self.joystickKnob.userInteractionEnabled = NO;
+    [self.joystickBase addSubview:self.joystickKnob];
 
     self.joystickCenter = CGPointMake(60, 60);
 
@@ -79,7 +84,7 @@
 
 // --- Joystick Logic ---
 - (void)handlePan:(UIPanGestureRecognizer *)pan {
-    CGPoint translation = [pan translationInView:self.joystickBase];
+    CGPoint translation =[pan translationInView:self.joystickBase];
     
     if (pan.state == UIGestureRecognizerStateBegan || pan.state == UIGestureRecognizerStateChanged) {
         CGFloat dx = translation.x;
@@ -96,7 +101,7 @@
         
     } else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateCancelled) {
         
-        // Snap back to center[UIView animateWithDuration:0.2 animations:^{
+        // Snap back to center correctly[UIView animateWithDuration:0.2 animations:^{
             self.joystickKnob.center = self.joystickCenter;
         }];
         
@@ -111,7 +116,6 @@
 - (void)sReleased { NSLog(@"[Controls] S Released"); }
 @end
 
-
 // ==========================================
 // 2. Injection Constructor
 // ==========================================
@@ -124,7 +128,7 @@ static void __attribute__((constructor)) initialize_controls(void) {
                                                   usingBlock:^(NSNotification * _Nonnull note) {
 
         UIWindow *targetWindow = nil;
-        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+        for (UIScene *scene in[UIApplication sharedApplication].connectedScenes) {
             if ([scene isKindOfClass:[UIWindowScene class]]) {
                 UIWindowScene *windowScene = (UIWindowScene *)scene;
                 for (UIWindow *window in windowScene.windows) {
